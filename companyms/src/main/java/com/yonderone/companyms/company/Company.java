@@ -13,9 +13,6 @@ public class Company {
     private String name;
     private String description;
 
-
-
-
     public Company() {
     }
 
