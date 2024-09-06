@@ -2,10 +2,12 @@ package com.yonderone.jobms.job.impl;
 
 
 
+import com.yonderone.jobms.external.Company;
 import com.yonderone.jobms.job.Job;
 import com.yonderone.jobms.job.JobRepository;
 import com.yonderone.jobms.job.JobService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,12 @@ public class JobServiceImpl implements JobService {
     }
 
     public List<Job> findAll() {
+        RestTemplate restTemplate = new RestTemplate();
+        Company company = restTemplate.getForObject("http://localhost:8081/companies/1", Company.class);
+        System.out.println("Company: " + company.getName());
+        System.out.println("Company: " + company.getId());
+        System.out.println("Company: " + company.getDescription());
+
         return jobRepository.findAll();
     }
 
