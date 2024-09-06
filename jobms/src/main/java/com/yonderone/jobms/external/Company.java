@@ -1,7 +1,5 @@
 package com.yonderone.jobms.external;
 
-import jakarta.persistence.*;
-
 public class Company {
     private Long id;
     private String name;

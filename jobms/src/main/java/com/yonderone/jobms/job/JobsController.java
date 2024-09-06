@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/jobs")
@@ -33,7 +34,7 @@ public class JobsController {
     public ResponseEntity<Job> findJobById(@PathVariable Long id) {
         Job job = jobService.getJobById(id);
 
-        if (job != null) {
+       /* if (job != null) {
             return ResponseEntity.ok(job);
         }
 
@@ -47,7 +48,18 @@ public class JobsController {
                 "loc",
                 1L
             )
-        );
+        );*/
+
+        return ResponseEntity.ok(Objects.requireNonNullElseGet(job, () -> new Job(
+            1L,
+            "Test Job",
+            "Test Job",
+            "100",
+            "100",
+            "loc",
+            1L
+        )));
+
     }
 
     @DeleteMapping("/{id}")

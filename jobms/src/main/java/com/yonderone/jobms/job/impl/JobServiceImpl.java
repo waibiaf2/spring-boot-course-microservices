@@ -24,7 +24,6 @@ public class JobServiceImpl implements JobService {
 
     public List<JobWithCompanyDTO> findAll() {
         List<Job> jobs = jobRepository.findAll();
-        List<JobWithCompanyDTO> jobWithCompanyDTOs = new ArrayList<>();
 
         return jobs.stream()
             .map(this::covertToDto)
