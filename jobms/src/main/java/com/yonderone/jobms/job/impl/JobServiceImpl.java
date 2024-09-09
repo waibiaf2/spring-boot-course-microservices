@@ -9,7 +9,6 @@ import com.yonderone.jobms.job.JobService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,29 +29,20 @@ public class JobServiceImpl implements JobService {
             .collect(Collectors.toList());
     }
 
-    private JobWithCompanyDTO covertToDto(Job job) {
-        JobWithCompanyDTO jobWithCompanyDTO = new JobWithCompanyDTO();
-        RestTemplate restTemplate = new RestTemplate();
-        jobWithCompanyDTO.setJob(job);
+    @Override
+    public JobWithCompanyDTO getJobById(Long id) {
+        Job job =  jobRepository.findById(id).orElse(null);
 
-        Company company = restTemplate.getForObject(
-            "http://localhost:8081/companies/" + job.getCompanyId(),
-            Company.class
-        );
+        if (job == null) {
+            return null;
+        }
 
-        jobWithCompanyDTO.setCompany(company);
-
-        return jobWithCompanyDTO;
+        return covertToDto(job);
     }
 
     @Override
     public void createJob(Job job) {
         jobRepository.save(job);
-    }
-
-    @Override
-    public Job getJobById(Long id) {
-        return jobRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -85,5 +75,21 @@ public class JobServiceImpl implements JobService {
         }
 
         return false;
+    }
+
+
+    private JobWithCompanyDTO covertToDto(Job job) {
+        JobWithCompanyDTO jobWithCompanyDTO = new JobWithCompanyDTO();
+        RestTemplate restTemplate = new RestTemplate();
+        jobWithCompanyDTO.setJob(job);
+
+        Company company = restTemplate.getForObject(
+            "http://localhost:8081/companies/" + job.getCompanyId(),
+            Company.class
+        );
+
+        jobWithCompanyDTO.setCompany(company);
+
+        return jobWithCompanyDTO;
     }
 }

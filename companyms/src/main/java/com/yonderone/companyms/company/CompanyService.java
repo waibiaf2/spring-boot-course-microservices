@@ -1,5 +1,7 @@
 package com.yonderone.companyms.company;
 
+import com.yonderone.companyms.dto.CompanyWithReviewsDTO;
+
 import java.util.List;
 
 public interface CompanyService {

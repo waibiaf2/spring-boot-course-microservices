@@ -31,35 +31,14 @@ public class JobsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Job> findJobById(@PathVariable Long id) {
-        Job job = jobService.getJobById(id);
+    public ResponseEntity<JobWithCompanyDTO> findJobById(@PathVariable Long id) {
+        JobWithCompanyDTO job = jobService.getJobById(id);
 
-       /* if (job != null) {
+        if (job == null) {
+            return ResponseEntity.notFound().build();
+        }else{
             return ResponseEntity.ok(job);
         }
-
-        return ResponseEntity.ok(
-            new Job(
-                1L,
-                "Test Job",
-                "Test Job",
-                "100",
-                "100",
-                "loc",
-                1L
-            )
-        );*/
-
-        return ResponseEntity.ok(Objects.requireNonNullElseGet(job, () -> new Job(
-            1L,
-            "Test Job",
-            "Test Job",
-            "100",
-            "100",
-            "loc",
-            1L
-        )));
-
     }
 
     @DeleteMapping("/{id}")
