@@ -90,6 +90,9 @@ public class JobServiceImpl implements JobService {
             Company.class
         );
 
-        return JobMapper.mapToJobWithCompanyDto(job, company);
+        JobWithCompanyDTO jobWithCompanyDTO;
+        jobWithCompanyDTO = JobMapper.mapToJobWithCompanyDto(job, company);
+
+        return jobWithCompanyDTO;
     }
 }
