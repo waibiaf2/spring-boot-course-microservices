@@ -6,6 +6,7 @@ import com.yonderone.jobms.external.Company;
 import com.yonderone.jobms.job.Job;
 import com.yonderone.jobms.job.JobRepository;
 import com.yonderone.jobms.job.JobService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,6 +18,9 @@ import java.util.stream.Collectors;
 public class JobServiceImpl implements JobService {
     JobRepository jobRepository;
 
+    @Autowired
+    RestTemplate restTemplate;
+
     public JobServiceImpl(JobRepository jobRepository) {
         this.jobRepository = jobRepository;
     }
@@ -27,6 +31,7 @@ public class JobServiceImpl implements JobService {
         return jobs.stream()
             .map(this::covertToDto)
             .collect(Collectors.toList());
+
     }
 
     @Override
@@ -77,14 +82,13 @@ public class JobServiceImpl implements JobService {
         return false;
     }
 
-
     private JobWithCompanyDTO covertToDto(Job job) {
         JobWithCompanyDTO jobWithCompanyDTO = new JobWithCompanyDTO();
-        RestTemplate restTemplate = new RestTemplate();
+        /*RestTemplate restTemplate = new RestTemplate();*/
         jobWithCompanyDTO.setJob(job);
 
         Company company = restTemplate.getForObject(
-            "http://localhost:8081/companies/" + job.getCompanyId(),
+            "http://COMPANY-SERVICE/companies/" + job.getCompanyId(),
             Company.class
         );
 
