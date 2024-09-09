@@ -1,9 +1,11 @@
 package com.yonderone.jobms.dto;
 
 import com.yonderone.jobms.external.Company;
-import com.yonderone.jobms.job.Job;
+import com.yonderone.jobms.external.Review;
 
-public class JobWithCompanyDTO {
+import java.util.List;
+
+public class JobDTO {
     private Long id;
     private String title;
     private String description;
@@ -11,6 +13,7 @@ public class JobWithCompanyDTO {
     private String maxSalary;
     private String location;
     private Company company;
+    private List<Review> reviews;
 
     public Long getId() {
         return id;
@@ -66,5 +69,13 @@ public class JobWithCompanyDTO {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

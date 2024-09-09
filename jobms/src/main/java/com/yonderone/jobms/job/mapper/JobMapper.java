@@ -1,22 +1,30 @@
 package com.yonderone.jobms.job.mapper;
 
-import com.yonderone.jobms.dto.JobWithCompanyDTO;
+import com.yonderone.jobms.dto.JobDTO;
 import com.yonderone.jobms.external.Company;
+import com.yonderone.jobms.external.Review;
 import com.yonderone.jobms.job.Job;
 
+import java.util.List;
+
 public class JobMapper {
-    public static JobWithCompanyDTO mapToJobWithCompanyDto(Job job, Company company) {
-        JobWithCompanyDTO jobWithCompanyDTO = new JobWithCompanyDTO();
+    public static JobDTO mapToJobWithCompanyDto(
+        Job job,
+        Company company,
+        List<Review> reviews
+    ) {
+        JobDTO jobDTO = new JobDTO();
 
-        jobWithCompanyDTO.setId(job.getId());
-        jobWithCompanyDTO.setTitle(job.getTitle());
-        jobWithCompanyDTO.setDescription(job.getDescription());
-        jobWithCompanyDTO.setMaxSalary(job.getMaxSalary());
-        jobWithCompanyDTO.setMaxSalary(job.getMaxSalary());
-        jobWithCompanyDTO.setLocation(job.getLocation());
+        jobDTO.setId(job.getId());
+        jobDTO.setTitle(job.getTitle());
+        jobDTO.setDescription(job.getDescription());
+        jobDTO.setMaxSalary(job.getMaxSalary());
+        jobDTO.setMaxSalary(job.getMaxSalary());
+        jobDTO.setLocation(job.getLocation());
+        jobDTO.setReviews(reviews);
 
-        jobWithCompanyDTO.setCompany(company);
+        jobDTO.setCompany(company);
 
-        return jobWithCompanyDTO;
+        return jobDTO;
     }
 }
