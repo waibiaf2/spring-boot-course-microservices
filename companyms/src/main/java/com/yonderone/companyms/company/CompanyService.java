@@ -5,7 +5,7 @@ import com.yonderone.companyms.dto.CompanyWithReviewsDTO;
 import java.util.List;
 
 public interface CompanyService {
-    List<Company> findAll();
+    List<CompanyWithReviewsDTO> findAll();
     Company updateCompanyById(Long id, Company updatedCompany);
     Company getCompanyById(Long id);
     void  createCompany(Company company);

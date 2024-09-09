@@ -1,5 +1,6 @@
 package com.yonderone.companyms.company;
 
+import com.yonderone.companyms.dto.CompanyWithReviewsDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +17,7 @@ public class CompanyController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Company>> getAllCompanies() {
+    public ResponseEntity<List<CompanyWithReviewsDTO>> getAllCompanies() {
         return new ResponseEntity<>(
             companyService.findAll(),
             HttpStatus.OK

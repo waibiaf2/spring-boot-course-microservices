@@ -6,6 +6,7 @@ import com.yonderone.jobms.external.Company;
 import com.yonderone.jobms.job.Job;
 import com.yonderone.jobms.job.JobRepository;
 import com.yonderone.jobms.job.JobService;
+import com.yonderone.jobms.job.mapper.JobMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -29,7 +30,7 @@ public class JobServiceImpl implements JobService {
         List<Job> jobs = jobRepository.findAll();
 
         return jobs.stream()
-            .map(this::covertToDto)
+            .map(this::convertToDto)
             .collect(Collectors.toList());
 
     }
@@ -42,7 +43,7 @@ public class JobServiceImpl implements JobService {
             return null;
         }
 
-        return covertToDto(job);
+        return convertToDto(job);
     }
 
     @Override
@@ -82,18 +83,13 @@ public class JobServiceImpl implements JobService {
         return false;
     }
 
-    private JobWithCompanyDTO covertToDto(Job job) {
-        JobWithCompanyDTO jobWithCompanyDTO = new JobWithCompanyDTO();
-        /*RestTemplate restTemplate = new RestTemplate();*/
-        jobWithCompanyDTO.setJob(job);
+    private JobWithCompanyDTO convertToDto(Job job) {
 
         Company company = restTemplate.getForObject(
             "http://COMPANY-SERVICE/companies/" + job.getCompanyId(),
             Company.class
         );
 
-        jobWithCompanyDTO.setCompany(company);
-
-        return jobWithCompanyDTO;
+        return JobMapper.mapToJobWithCompanyDto(job, company);
     }
 }

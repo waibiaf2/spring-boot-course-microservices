@@ -3,21 +3,33 @@ package com.yonderone.companyms.company.impl;
 import com.yonderone.companyms.company.Company;
 import com.yonderone.companyms.company.CompanyRepository;
 import com.yonderone.companyms.company.CompanyService;
+import com.yonderone.companyms.dto.CompanyWithReviewsDTO;
+import com.yonderone.companyms.external.Review;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
 
+    @Autowired
+    RestTemplate restTemplate;
+
     public CompanyServiceImpl(CompanyRepository companyRepository) {
         this.companyRepository = companyRepository;
     }
 
-    public List<Company> findAll() {
-       return companyRepository.findAll();
+    public List<CompanyWithReviewsDTO> findAll() {
+       List<Company> companies =  companyRepository.findAll();
+
+       return companies.stream()
+           .map(this::covertToDto)
+           .collect(Collectors.toList());
     }
 
     @Override
@@ -53,5 +65,17 @@ public class CompanyServiceImpl implements CompanyService {
             return true;
         }else
             return false;
+    }
+
+    private CompanyWithReviewsDTO covertToDto(Company company) {
+        CompanyWithReviewsDTO companyWithReviewsDTO = new CompanyWithReviewsDTO();
+
+        companyWithReviewsDTO.setCompany(company);
+
+        List<Review> reviews = restTemplate.getForObject("http://REVIEW-SERVICE/reviews?companyId=" + company.getId(), List.class);
+
+        companyWithReviewsDTO.setReviews(reviews);
+
+        return companyWithReviewsDTO;
     }
 }
