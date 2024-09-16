@@ -21,6 +21,7 @@ public class JobMapper {
         jobDTO.setMaxSalary(job.getMaxSalary());
         jobDTO.setMaxSalary(job.getMaxSalary());
         jobDTO.setLocation(job.getLocation());
+
         jobDTO.setReviews(reviews);
 
         jobDTO.setCompany(company);
