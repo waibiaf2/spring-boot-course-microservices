@@ -89,12 +89,12 @@ public class JobServiceImpl implements JobService {
     private JobDTO convertToDto(Job job) {
 
         Company company = restTemplate.getForObject(
-            "http://COMPANY-SERVICE/companies/" + job.getCompanyId(),
+            "http://GATEWAY/companies/" + job.getCompanyId(),
             Company.class
         );
 
         ResponseEntity<List<Review>> reviewResponse = restTemplate.exchange(
-            "http://REVIEW-SERVICE/reviews?companyId=" + job.getCompanyId(),
+            "http://GATEWAY/reviews?companyId=" + job.getCompanyId(),
             HttpMethod.GET,
             null,
             new ParameterizedTypeReference<List<Review>>() {}
