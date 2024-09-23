@@ -8,6 +8,7 @@ import com.yonderone.jobms.job.Job;
 import java.util.List;
 
 public class JobMapper {
+
     public static JobDTO mapToJobWithCompanyDto(
         Job job,
         Company company,

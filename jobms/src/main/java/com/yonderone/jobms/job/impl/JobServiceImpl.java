@@ -1,6 +1,5 @@
 package com.yonderone.jobms.job.impl;
 
-
 import com.yonderone.jobms.dto.JobDTO;
 import com.yonderone.jobms.external.Company;
 import com.yonderone.jobms.external.Review;
