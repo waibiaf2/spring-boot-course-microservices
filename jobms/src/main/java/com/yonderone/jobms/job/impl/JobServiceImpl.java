@@ -7,6 +7,7 @@ import com.yonderone.jobms.job.Job;
 import com.yonderone.jobms.job.JobRepository;
 import com.yonderone.jobms.job.JobService;
 import com.yonderone.jobms.job.mapper.JobMapper;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -29,6 +30,8 @@ public class JobServiceImpl implements JobService {
         this.jobRepository = jobRepository;
     }
 
+    @Override
+    @CircuitBreaker(name= "companyBreaker")
     public List<JobDTO> findAll() {
         List<Job> jobs = jobRepository.findAll();
 
