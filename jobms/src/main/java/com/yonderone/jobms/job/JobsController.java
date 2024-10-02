@@ -4,6 +4,7 @@ import com.yonderone.jobms.dto.JobDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -34,7 +35,7 @@ public class JobsController {
 
         if (job == null) {
             return ResponseEntity.notFound().build();
-        }else{
+        } else {
             return ResponseEntity.ok(job);
         }
     }
@@ -44,16 +45,10 @@ public class JobsController {
         boolean deleted = jobService.deleteJobById(id);
 
         if (deleted) {
-            return new ResponseEntity<>(
-                    "Job deleted successfully",
-                    HttpStatus.OK
-            );
+            return new ResponseEntity<>("Job deleted successfully", HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(
-                "Job not found",
-                HttpStatus.NOT_FOUND
-        );
+        return new ResponseEntity<>("Job not found", HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/{id}")
