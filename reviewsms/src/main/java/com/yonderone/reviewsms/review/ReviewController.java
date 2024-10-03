@@ -1,5 +1,6 @@
 package com.yonderone.reviewsms.review;
 
+import com.yonderone.reviewsms.messaging.ReviewMessageProducer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,9 +11,12 @@ import java.util.List;
 @RequestMapping("/reviews")
 public class ReviewController {
     private final ReviewService reviewService;
+    private final ReviewMessageProducer reviewMessageProducer;
 
-    public ReviewController(ReviewService reviewService) {
+
+    public ReviewController(ReviewService reviewService, ReviewMessageProducer reviewMessageProducer) {
         this.reviewService = reviewService;
+        this.reviewMessageProducer = reviewMessageProducer;
     }
 
     @GetMapping
@@ -32,6 +36,7 @@ public class ReviewController {
         @PathVariable Long reviewId
     ) {
         Review review = reviewService.getReviewById(reviewId);
+
         if (review != null) {
             return new ResponseEntity<>(
                 review,
@@ -51,6 +56,7 @@ public class ReviewController {
     ) {
         boolean isReviewSaved = reviewService.addReview(companyId, review);
         if (isReviewSaved) {
+            reviewMessageProducer.sendMessage(review);
             return new ResponseEntity<>(
                 "Review added",
                 HttpStatus.OK

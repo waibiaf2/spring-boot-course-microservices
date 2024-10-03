@@ -1,6 +1,7 @@
 package com.yonderone.companyms.company;
 
 import com.yonderone.companyms.dto.CompanyWithReviewsDTO;
+import com.yonderone.companyms.dto.ReviewMessage;
 
 import java.util.List;
 
@@ -10,4 +11,6 @@ public interface CompanyService {
     Company getCompanyById(Long id);
     void  createCompany(Company company);
     boolean deleteCompany(Long id);
+
+    public void updateCompanyRating(ReviewMessage reviewMessage);
 }
