@@ -1,34 +1,11 @@
-package com.yonderone.reviewsms.review;
+package com.yonderone.companyms.company.dto;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name = "reviews")
-public class Review {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ReviewMessage {
     private Long id;
     private String title;
     private String description;
-    private Double rating;
+    private double rating;
     private Long companyId;
-
-    public Review() {
-    }
-
-    public Review(
-        Long id,
-        String title,
-        String description,
-        Double rating,
-        Long companyId
-    ) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.rating = rating;
-        this.companyId = companyId;
-    }
 
     public Long getId() {
         return id;
@@ -50,8 +27,8 @@ public class Review {
         return description;
     }
 
-    public void setDescription(String body) {
-        this.description = body;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public double getRating() {
@@ -70,4 +47,3 @@ public class Review {
         this.companyId = companyId;
     }
 }
-

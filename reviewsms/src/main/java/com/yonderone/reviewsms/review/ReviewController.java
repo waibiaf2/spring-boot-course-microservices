@@ -1,6 +1,6 @@
 package com.yonderone.reviewsms.review;
 
-import com.yonderone.reviewsms.messaging.ReviewMessageProducer;
+import com.yonderone.reviewsms.review.messaging.ReviewMessageProducer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,17 +13,19 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ReviewMessageProducer reviewMessageProducer;
 
-
-    public ReviewController(ReviewService reviewService, ReviewMessageProducer reviewMessageProducer) {
+    public ReviewController(
+            ReviewService reviewService,
+            ReviewMessageProducer reviewMessageProducer
+    ) {
         this.reviewService = reviewService;
         this.reviewMessageProducer = reviewMessageProducer;
     }
 
     @GetMapping
     public ResponseEntity<List<Review>> getAllReviews(
-        @RequestParam Long companyId
+            @RequestParam Long companyId
     ) {
-        List<Review> reviews = reviewService.findAll(companyId);
+        List<Review> reviews = reviewService.getAllReviews(companyId);
 
         return new ResponseEntity<>(
             reviews,
@@ -33,58 +35,60 @@ public class ReviewController {
 
     @GetMapping("/{reviewId}")
     public ResponseEntity<Review> getReview(
-        @PathVariable Long reviewId
+            @PathVariable Long reviewId
     ) {
         Review review = reviewService.getReviewById(reviewId);
 
         if (review != null) {
             return new ResponseEntity<>(
-                review,
-                HttpStatus.OK
+                    review,
+                    HttpStatus.OK
             );
         } else {
             return new ResponseEntity<>(
-                HttpStatus.NOT_FOUND
+                    HttpStatus.NOT_FOUND
             );
         }
     }
 
     @PostMapping
     public ResponseEntity<String> addReview(
-        @RequestParam Long companyId,
-        @RequestBody Review review
+            @RequestParam Long companyId,
+            @RequestBody Review review
     ) {
         boolean isReviewSaved = reviewService.addReview(companyId, review);
+
         if (isReviewSaved) {
             reviewMessageProducer.sendMessage(review);
             return new ResponseEntity<>(
-                "Review added",
-                HttpStatus.OK
+                    "Review added",
+                    HttpStatus.OK
             );
         } else {
             return new ResponseEntity<>(
-                "Review Was Not Saved",
-                HttpStatus.NOT_FOUND
+                    "Review Was Not Saved",
+                    HttpStatus.NOT_FOUND
             );
         }
+
     }
 
     @PutMapping("/{reviewId}")
     public ResponseEntity<String> updateReview(
-        @PathVariable Long reviewId,
-        @RequestBody Review review
+            @PathVariable Long reviewId,
+            @RequestBody Review review
     ) {
         boolean reviewUpdated = reviewService.updateReview(reviewId, review);
 
         if (reviewUpdated) {
             return new ResponseEntity<>(
-                "Review Successfully updates",
-                HttpStatus.OK
+                    "Review Successfully updated",
+                    HttpStatus.OK
             );
         } else {
             return new ResponseEntity<>(
-                "Review Not Updated",
-                HttpStatus.NOT_FOUND
+                    "Review Not Updated",
+                    HttpStatus.NOT_FOUND
             );
         }
 
@@ -92,20 +96,31 @@ public class ReviewController {
 
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<String> deleteReview(
-        @PathVariable Long reviewId
+            @PathVariable Long reviewId
     ) {
         boolean isReviewDeleted = reviewService.deleteReview(reviewId);
 
         if (isReviewDeleted) {
             return new ResponseEntity<>(
-                "Review Deleted Successfully",
-                HttpStatus.OK
+                    "Review Deleted Successfully",
+                    HttpStatus.OK
             );
         } else {
             return new ResponseEntity<>(
-                "Review Not Deleted",
-                HttpStatus.NOT_FOUND
+                    "Review Not Deleted",
+                    HttpStatus.NOT_FOUND
             );
         }
     }
+
+    @GetMapping("/averageRating")
+    public Double getReviewRatingAverage(@RequestParam Long companyId) {
+        List<Review> reviews = reviewService.getAllReviews(companyId);
+
+        return reviews.stream()
+                .mapToDouble(Review::getRating)
+                .average()
+                .orElse(0.0);
+    }
 }
+

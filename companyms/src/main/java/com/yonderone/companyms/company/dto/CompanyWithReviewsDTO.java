@@ -1,4 +1,4 @@
-package com.yonderone.companyms.dto;
+package com.yonderone.companyms.company.dto;
 
 import com.yonderone.companyms.company.Company;
 import com.yonderone.companyms.external.Review;

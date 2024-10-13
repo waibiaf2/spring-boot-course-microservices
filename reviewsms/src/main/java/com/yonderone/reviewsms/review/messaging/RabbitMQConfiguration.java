@@ -1,4 +1,4 @@
-package com.yonderone.reviewsms.messaging;
+package com.yonderone.reviewsms.review.messaging;
 
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -13,7 +13,7 @@ public class RabbitMQConfiguration {
 
     @Bean
     public Queue companyRatingQueue() {
-        return new Queue("companyRatingQueue");
+        return new Queue("companyRatingsQueue");
     }
 
     @Bean

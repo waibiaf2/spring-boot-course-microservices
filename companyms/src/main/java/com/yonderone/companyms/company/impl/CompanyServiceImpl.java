@@ -3,13 +3,15 @@ package com.yonderone.companyms.company.impl;
 import com.yonderone.companyms.company.Company;
 import com.yonderone.companyms.company.CompanyRepository;
 import com.yonderone.companyms.company.CompanyService;
-import com.yonderone.companyms.dto.CompanyWithReviewsDTO;
+import com.yonderone.companyms.company.client.ReviewClient;
+import com.yonderone.companyms.company.dto.CompanyWithReviewsDTO;
+import com.yonderone.companyms.company.dto.ReviewMessage;
 import com.yonderone.companyms.external.Review;
+import jakarta.ws.rs.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,12 +19,17 @@ import java.util.stream.Collectors;
 @Service
 public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
+    private final ReviewClient reviewClient;
 
     @Autowired
     RestTemplate restTemplate;
 
-    public CompanyServiceImpl(CompanyRepository companyRepository) {
+    public CompanyServiceImpl(
+        CompanyRepository companyRepository,
+        ReviewClient reviewClient
+    ) {
         this.companyRepository = companyRepository;
+        this.reviewClient = reviewClient;
     }
 
     public List<CompanyWithReviewsDTO> findAll() {
@@ -44,7 +51,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Company updateCompanyById(Long id, Company company) {
+    public void updateCompanyById(Long id, Company company) {
         Optional<Company> companyOptional = companyRepository.findById(id);
 
         if (companyOptional.isPresent()) {
@@ -54,10 +61,20 @@ public class CompanyServiceImpl implements CompanyService {
             updatedCompany.setDescription(company.getDescription());
 
             companyRepository.save(updatedCompany);
-            return updatedCompany;
         }
 
-        return null;
+    }
+
+    @Override
+    public void updateCompanyRating(ReviewMessage reviewMessage) {
+        /*System.out.println(reviewMessage.getDescription());*/
+        Company company = companyRepository
+                .findById(reviewMessage.getCompanyId())
+                .orElseThrow(() -> new NotFoundException("Company not found" + reviewMessage.getCompanyId()));
+
+        Double averageRating = reviewClient.getAverageRatingForCompany(reviewMessage.getCompanyId());
+        company.setRating(averageRating);
+        companyRepository.save(company);
     }
 
     public boolean deleteCompany(Long id) {

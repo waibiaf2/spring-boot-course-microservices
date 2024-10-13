@@ -1,6 +1,6 @@
 package com.yonderone.companyms.company;
 
-import com.yonderone.companyms.dto.CompanyWithReviewsDTO;
+import com.yonderone.companyms.company.dto.CompanyWithReviewsDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
