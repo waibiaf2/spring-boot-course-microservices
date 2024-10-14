@@ -1,4 +1,4 @@
-package com.yonderone.jobms.external;
+package com.yonderone.jobms.job.external;
 
 public class Company {
     private Long id;

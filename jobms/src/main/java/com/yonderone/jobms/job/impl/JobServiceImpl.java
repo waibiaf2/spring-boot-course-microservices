@@ -1,15 +1,15 @@
 package com.yonderone.jobms.job.impl;
 
-import com.yonderone.jobms.dto.JobDTO;
-import com.yonderone.jobms.external.Company;
-import com.yonderone.jobms.external.Review;
+import com.yonderone.jobms.job.clients.CompanyClient;
+import com.yonderone.jobms.job.clients.ReviewClient;
+import com.yonderone.jobms.job.dto.JobDTO;
+import com.yonderone.jobms.job.external.Company;
+import com.yonderone.jobms.job.external.Review;
 import com.yonderone.jobms.job.Job;
 import com.yonderone.jobms.job.JobRepository;
 import com.yonderone.jobms.job.JobService;
 import com.yonderone.jobms.job.mapper.JobMapper;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
-import io.github.resilience4j.retry.annotation.Retry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -25,21 +25,25 @@ import java.util.stream.Collectors;
 @Service
 public class JobServiceImpl implements JobService {
     JobRepository jobRepository;
+    CompanyClient companyClient;
+    ReviewClient reviewClient;
 
     @Autowired
     RestTemplate restTemplate;
 
     int attempt = 0;
 
-    public JobServiceImpl(JobRepository jobRepository) {
+    public JobServiceImpl(JobRepository jobRepository, CompanyClient companyClient, ReviewClient reviewClient) {
         this.jobRepository = jobRepository;
+        this.companyClient = companyClient;
+        this.reviewClient = reviewClient;
     }
 
     @Override
     /*@CircuitBreaker(name= "companyBreaker", fallbackMethod = "companyBreakerFallback")*/
     /*@Retry(name = "companyBreaker", fallbackMethod = "companyBreakerFallback")*/
     @RateLimiter(name = "companyBreaker", fallbackMethod = "companyBreakerFallback")
-    public List<JobDTO> findAll() {
+    public List<JobDTO> findAllJobs() {
         System.out.println("Attempt: " + ++attempt);
         List<Job> jobs = jobRepository.findAll();
 
@@ -104,12 +108,12 @@ public class JobServiceImpl implements JobService {
 
     private JobDTO convertToDto(Job job) {
 
-        Company company = restTemplate.getForObject(
+        /*Company company = restTemplate.getForObject(
             "http://GATEWAY/companies/" + job.getCompanyId(),
             Company.class
-        );
+        );*/
 
-        ResponseEntity<List<Review>> reviewResponse = restTemplate.exchange(
+       /* ResponseEntity<List<Review>> reviewResponse = restTemplate.exchange(
             "http://GATEWAY/reviews?companyId=" + job.getCompanyId(),
             HttpMethod.GET,
             null,
@@ -117,6 +121,10 @@ public class JobServiceImpl implements JobService {
         );
 
         List<Review> reviews = reviewResponse.getBody();
+        */
+
+        Company company = companyClient.getCompany(job.getCompanyId());
+        List<Review> reviews = reviewClient.getReviews(job.getCompanyId());
 
         JobDTO jobDTO;
         jobDTO = JobMapper.mapToJobWithCompanyDto(job, company, reviews);

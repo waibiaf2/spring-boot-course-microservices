@@ -1,8 +1,8 @@
 package com.yonderone.jobms.job.mapper;
 
-import com.yonderone.jobms.dto.JobDTO;
-import com.yonderone.jobms.external.Company;
-import com.yonderone.jobms.external.Review;
+import com.yonderone.jobms.job.dto.JobDTO;
+import com.yonderone.jobms.job.external.Company;
+import com.yonderone.jobms.job.external.Review;
 import com.yonderone.jobms.job.Job;
 
 import java.util.List;

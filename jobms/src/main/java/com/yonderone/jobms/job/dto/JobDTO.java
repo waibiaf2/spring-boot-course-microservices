@@ -1,7 +1,7 @@
-package com.yonderone.jobms.dto;
+package com.yonderone.jobms.job.dto;
 
-import com.yonderone.jobms.external.Company;
-import com.yonderone.jobms.external.Review;
+import com.yonderone.jobms.job.external.Company;
+import com.yonderone.jobms.job.external.Review;
 
 import java.util.List;
 

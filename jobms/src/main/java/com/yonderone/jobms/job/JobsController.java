@@ -1,6 +1,6 @@
 package com.yonderone.jobms.job;
 
-import com.yonderone.jobms.dto.JobDTO;
+import com.yonderone.jobms.job.dto.JobDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public class JobsController {
     @GetMapping
     public ResponseEntity<List<JobDTO>> findAll() {
         /*return ResponseEntity.ok(jobService.getJobs());*/
-        return new ResponseEntity<>(jobService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(jobService.findAllJobs(), HttpStatus.OK);
     }
 
     @PostMapping
